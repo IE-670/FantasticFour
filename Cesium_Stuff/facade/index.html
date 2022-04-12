@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">  
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<script src="buildingCoordinates.js"></script>
+	<script src="../keys.js"></script>
+
+  <style>
+	#cesiumContainer {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		overflow: hidden;
+		padding: 0;
+		font-family: sans-serif;
+		box-sizing: border-box;
+		display: inline-block;
+		z-index: 0;
+	}
+  
+  	.inputDiv {
+  		position: absolute;
+  		left: 5px;
+  		top: 5px;
+  		max-width: 200px;
+  		background-color: rgba(42,42,42,0.7);
+  		color: white;
+  		padding: 20px;
+  		border-radius: 4px;
+  	}
+  	.outputDiv {
+  		position: absolute;
+  		right: 5px;
+  		top: 5px;
+  		width: 200px;
+  		background-color: rgba(42,42,42,0.7);
+  		color: white;
+  		padding: 20px;
+  		border-radius: 4px;
+  	}
+
+  </style>
+  
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <!--<div id="toolbar">
+		<div id="propertiesMenu"></div>
+    </div>
+  -->
+  
+<div class="inputDiv">
+	<p>
+	<button onclick="toggleBuildings()">Toggle Red Buildings</button>
+	</p>
+	
+	<p>
+	<label for="distFromWall">Distance to Wall</label>
+	<input type="number" id="distFromWall" onInput="rePosition();">
+	</p>
+
+	<p>
+	<label for="droneHeight">Height of Drone</label>
+	<input type="number" id="droneHeight" onInput="rePosition();">
+	</p>
+	
+	<p>
+	<label for="nadir">Off-Nadir Angle</label>
+	<input type="number" id="nadir" onInput="rePosition();">
+	</p>
+
+	<p>
+	<label for="fovH">FOV:H</label>
+	<input type="number" id="fovH" onInput="rePosition();">
+	</p>
+
+	<p>
+	<label for="fovW">FOV:W</label>
+	<input type="number" id="fovW" onInput="rePosition();">
+	</p>
+
+	<!--<button onClick="rePosition()">Re-Position</button>-->
+</div>
+
+<div class="outputDiv">
+	<p id="areaCoverage"></p>
+</div>
+
+
+  <script>
+    // Cesium.Ion.defaultAccessToken = '';
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+//        terrainProvider: Cesium.createWorldTerrain(),
+		animation:false,
+		timeline:false,
+		homeButton:false,
+		infoBox:false,
+		geocoder:false,
+		navigationHelpButton:false,
+		sceneModePicker:false,
+		baseLayerPicker:false,
+		shouldAnimate:true
+    });
+    function toggleBuildings(){
+        build.show = !build.show;
+    };
+    function removeEntities(){
+        //viewer.entities.remove(ent);
+        viewer.entities.remove(coverageArea);
+        viewer.entities.remove(drone);
+        viewer.entities.remove(brPoint);
+        viewer.entities.remove(blPoint);
+        viewer.entities.remove(tlPoint);
+        viewer.entities.remove(trPoint);
+        viewer.entities.remove(centerPoint);
+    };
+    
+    function changeDroneHeight(height,initialPos){
+        var initialPosGeo = Cesium.Ellipsoid.WGS84.cartesianToCartographic(initialPos);
+        var initialPos = Cesium.Cartesian3.fromRadians(initialPosGeo.longitude,initialPosGeo.latitude,height);
+        var droneOrientation = Cesium.Transforms.headingPitchRollQuaternion(initialPos,hpr);
+        drone.orientation = droneOrientation; 
+        drone.position = initialPos; 
+        var cameraRay = getRay(cameraheading,camerapitch,modelroll,initialPos,plane); 
+        var brRay = getRay(brheading,brpitch,modelroll,initialPos,plane); 
+        var blRay = getRay(blheading,blpitch,modelroll,initialPos,plane); 
+        var trRay = getRay(trheading,trpitch,modelroll,initialPos,plane); 
+        var tlRay = getRay(tlheading,tlpitch,modelroll,initialPos,plane);
+        centerPoint.polyline.positions = [initialPos,cameraRay];
+        brPoint.polyline.positions = [initialPos,brRay];
+        blPoint.polyline.positions = [initialPos,blRay];
+        tlPoint.polyline.positions = [initialPos,tlRay];
+        trPoint.polyline.positions = [initialPos,trRay];
+        coverageArea.polygon.hierarchy = [tlRay,trRay,brRay,blRay];
+        return height; 
+        
+    }; 
+    function changeNadir(nadir,initialPos,height){
+        var initialPosGeo = Cesium.Ellipsoid.WGS84.cartesianToCartographic(initialPos);
+        var initialPos = Cesium.Cartesian3.fromRadians(initialPosGeo.longitude,initialPosGeo.latitude,height);
+        var droneOrientation = Cesium.Transforms.headingPitchRollQuaternion(initialPos,hpr);
+        var camerapitch = Cesium.Math.toRadians(-nadir);
+        var cameraRay = getRay(cameraheading,camerapitch,modelroll,initialPos,plane); 
+        var brpitch = Cesium.Math.toRadians(-nadir-fovH);
+        var brRay = getRay(brheading,brpitch,modelroll,initialPos,plane); 
+        var blpitch = Cesium.Math.toRadians(-nadir-fovH);
+        var blRay = getRay(blheading,blpitch,modelroll,initialPos,plane); 
+        var trpitch = Cesium.Math.toRadians(-nadir+fovH);
+        var trRay = getRay(trheading,trpitch,modelroll,initialPos,plane); 
+        var tlpitch = Cesium.Math.toRadians(-nadir+fovH);
+        var tlRay = getRay(tlheading,tlpitch,modelroll,initialPos,plane);
+        centerPoint.polyline.positions = [initialPos,cameraRay];
+        brPoint.polyline.positions = [initialPos,brRay];
+        blPoint.polyline.positions = [initialPos,blRay];
+        tlPoint.polyline.positions = [initialPos,tlRay];
+        trPoint.polyline.positions = [initialPos,trRay];
+        coverageArea.polygon.hierarchy = [tlRay,trRay,brRay,blRay]; 
+        
+    }; 
+    function distance2Wall(dist2Wall){
+        var initialPos = new Cesium.Cartesian3(908928.9479744005,-4582614.971993346,4327580.8919546995);
+        var initialPosGeo = Cesium.Ellipsoid.WGS84.cartesianToCartographic(initialPos);
+        var initialPos = Cesium.Cartesian3.fromRadians(initialPosGeo.longitude,initialPosGeo.latitude,height);
+        var distFromWall = new Cesium.Cartesian3(-norm.x*dist2Wall,-norm.y*dist2Wall,-norm.z*dist2Wall); 
+        var initialPos = new Cesium.Cartesian3.add(initialPos,distFromWall,new Cesium.Cartesian3());
+        var droneOrientation = Cesium.Transforms.headingPitchRollQuaternion(initialPos,hpr);
+        drone.orientation = droneOrientation; 
+        drone.position = initialPos; 
+        var cameraRay = getRay(cameraheading,camerapitch,modelroll,initialPos,plane); 
+        var brRay = getRay(brheading,brpitch,modelroll,initialPos,plane); 
+        var blRay = getRay(blheading,blpitch,modelroll,initialPos,plane); 
+        var trRay = getRay(trheading,trpitch,modelroll,initialPos,plane); 
+        var tlRay = getRay(tlheading,tlpitch,modelroll,initialPos,plane);
+        centerPoint.polyline.positions = [initialPos,cameraRay];
+        brPoint.polyline.positions = [initialPos,brRay];
+        blPoint.polyline.positions = [initialPos,blRay];
+        tlPoint.polyline.positions = [initialPos,tlRay];
+        trPoint.polyline.positions = [initialPos,trRay];
+        coverageArea.polygon.hierarchy = [tlRay,trRay,brRay,blRay]; 
+        //var ent=  addEntities(); 
+    }; 
+    function getRay(heading, pitch,roll,pos,plane){
+        var hpr = new Cesium.HeadingPitchRoll(heading,pitch,roll);
+        var orientation = Cesium.Transforms.headingPitchRollQuaternion(pos,hpr);
+        var hprMatrix = Cesium.Matrix3.fromQuaternion(orientation);
+        var direction = Cesium.Matrix3.multiplyByVector(hprMatrix,
+                                                        Cesium.Cartesian3.UNIT_X,
+                                                        new Cesium.Cartesian3());
+        var ray = new Cesium.Ray(pos,direction);
+        var point = new Cesium.IntersectionTests.rayPlane(ray,plane,new Cesium.Cartesian3());
+        return point;
+    };
+    var check = 1;
+    //console.log('c1',check); 
+    //alumni segment 0,1
+    // 
+    //[-78.7818, 43.00089],
+    //[-78.78071, 43.0009],
+    //define plane 
+    var pointOnPlane = new Cesium.Cartesian3.fromDegrees(-78.7818, 43.00089,0);
+    var b = new Cesium.Cartesian3.fromDegrees(-78.78071, 43.0009,0);
+    var c = new Cesium.Cartesian3.fromDegrees(-78.78071, 43.0009,25);
+    var B = new Cesium.Cartesian3(b.x-pointOnPlane.x,b.y-pointOnPlane.y,b.z-pointOnPlane.z);
+    var C = new Cesium.Cartesian3(c.x-pointOnPlane.x,c.y-pointOnPlane.y,c.z-pointOnPlane.z);
+    var tmp = Cesium.Cartesian3.cross(B,C,new Cesium.Cartesian3());
+    var norm = new Cesium.Cartesian3.normalize(tmp, new Cesium.Cartesian3());
+    var plane = new Cesium.Plane.fromPointNormal(b,norm);
+    //**define plane 
+    //include buildings 
+    var builds = myBuildings();
+    //**include buildings
+    // initial conditions 
+    var fovH = 15;
+    var fovW =30;
+    var nadir = 15; 
+    var height = 20;
+    var dist2Wall = 15;
+    //https://www.ni.com/en-us/support/documentation/supplemental/18/calculating-camera-sensor-resolution-and-lens-focal-length.html
+    //var sensorSize;//diagonal
+    //var FOV;//#mmx#mm
+    //var smallestFeature;//#mm
+    //var focalLength;//#mm
+    //var imageResolutuion; //pix/dist 
+    //var sensorRes = 2*FOV/samllestFeature;
+    //var workingDist = focalLength*FOV/sensorSize
+    //https://static1.squarespace.com/static/551ecf1ae4b0b101cf72bfa3/t/55412684e4b0512f43caa5de/1430333060072/Resolution_calculation.pdf
+    //var workingDist = focalLength*numPixelsHorizontal/chipWidth/imageResolution;
+
+    var initialPos = new Cesium.Cartesian3(908928.9479744005,-4582614.971993346,4327580.8919546995);
+    var initialPosGeo = Cesium.Ellipsoid.WGS84.cartesianToCartographic(initialPos);
+    var initialPos = Cesium.Cartesian3.fromRadians(initialPosGeo.longitude,initialPosGeo.latitude,height);
+    var distFromWall = new Cesium.Cartesian3(-norm.x*dist2Wall,-norm.y*dist2Wall,-norm.z*dist2Wall); 
+    var initialPos = new Cesium.Cartesian3.add(initialPos,distFromWall,new Cesium.Cartesian3());
+    var modelheading = Cesium.Math.toRadians(90);
+    var modelpitch = Cesium.Math.toRadians(0);
+    var modelroll = 0;
+    var hpr = new Cesium.HeadingPitchRoll(modelheading,modelpitch,modelroll);
+    var droneOrientation = Cesium.Transforms.headingPitchRollQuaternion(initialPos,hpr);
+    //**initial conditions
+    
+    //camera orientation 
+    var cameraheading = Cesium.Math.toRadians(90);
+    var camerapitch = Cesium.Math.toRadians(-nadir);
+    var cameraRay = getRay(cameraheading,camerapitch,modelroll,initialPos,plane); 
+    //**camera orientation 
+    
+    //bottom right ray orientation
+    var brheading = Cesium.Math.toRadians(90+fovW);
+    var brpitch = Cesium.Math.toRadians(-nadir-fovH);
+    var brRay = getRay(brheading,brpitch,modelroll,initialPos,plane); 
+    //**bottom right ray orientation
+    
+    //bottom left ray orientation
+    var blheading = Cesium.Math.toRadians(90-fovW);
+    var blpitch = Cesium.Math.toRadians(-nadir-fovH);
+    var blRay = getRay(blheading,blpitch,modelroll,initialPos,plane); 
+    //**bottom left ray orientation
+    
+    //top right ray orientation
+    var trheading = Cesium.Math.toRadians(90+fovW);
+    var trpitch = Cesium.Math.toRadians(-nadir+fovH);
+    var trRay = getRay(trheading,trpitch,modelroll,initialPos,plane); 
+    //**top right ray orientation
+    
+    //top left ray orientation
+    var tlheading = Cesium.Math.toRadians(90-fovW);
+    var tlpitch = Cesium.Math.toRadians(-nadir+fovH);
+    var tlRay = getRay(tlheading,tlpitch,modelroll,initialPos,plane); 
+    //**top left ray orientation
+    
+    tlpos = Cesium.Ellipsoid.WGS84.cartesianToCartographic(tlRay);
+    trpos = Cesium.Ellipsoid.WGS84.cartesianToCartographic(trRay);
+    brpos = Cesium.Ellipsoid.WGS84.cartesianToCartographic(brRay);
+    blpos = Cesium.Ellipsoid.WGS84.cartesianToCartographic(blRay);
+    var a = Cesium.Cartesian3.distance(tlRay,trRay);
+    var b = Cesium.Cartesian3.distance(blRay,brRay);
+    var ed = Cesium.Cartesian3.distance(trRay,brRay);
+    var fa = Cesium.Cartesian3.distance(tlRay,blRay);
+    var areaTrapazoidL = .5*(a+b)*(tlpos.height-blpos.height);  
+    var areaTrapazoidR = .5*(a+b)*(trpos.height-brpos.height);  
+    //console.log(a,b,a-b,tlpos.height-blpos.height,trpos.height-brpos.height);
+    //console.log(areaTrapazoidL,areaTrapazoidR);
+    //add entities 
+    function getDescription(brpos,blpos,trpos,tlpos){
+        var a = Cesium.Cartesian3.distance(tlRay,trRay);
+        var b = Cesium.Cartesian3.distance(blRay,brRay);
+        var ed = Cesium.Cartesian3.distance(trRay,brRay);
+        var fa = Cesium.Cartesian3.distance(tlRay,blRay);
+        var areaTrapazoidL = .5*(a+b)*(tlpos.height-blpos.height);  
+        var areaTrapazoidR = .5*(a+b)*(trpos.height-brpos.height);
+        var description = "The current FOV has an area of "+areaTrapazoidL.toString()+" m^2";
+        
+        console.log('NOTE: The area doesnt seem to be changing');
+        document.getElementById('areaCoverage').innerHTML = "Area: " + areaTrapazoidL.toFixed(2) + " m<sup>2</sup>";
+        
+        return description  
+    }
+    var description = getDescription(brpos,blpos,trpos,tlpos);
+        var drone = viewer.entities.add({
+            name: "drone",
+            position: initialPos,
+            orientation : droneOrientation,
+            description:description, 
+            model: {
+                uri:"CesiumDrone.glb",
+                minimumPixelSize:128,
+                maximumScale:20000,
+        
+            },
+        });
+        viewer.zoomTo(drone);
+
+        var centerPoint =viewer.entities.add({
+            name:"centerPoint",
+            polyline:{
+                positions: [initialPos,cameraRay],
+                width: 4,
+                material:new Cesium.PolylineArrowMaterialProperty(Cesium.Color.BLUE),
+            },
+        });
+
+        var brPoint =viewer.entities.add({
+            name:"br point",
+            polyline:{
+                positions: [initialPos,brRay],
+                width: 4,
+                material:new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED),
+            },
+        });
+        var blPoint =viewer.entities.add({
+            name:"bl point",
+            polyline:{
+                positions: [initialPos,blRay],
+                width: 4,
+                material:new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED),
+            },
+        });
+        var tlPoint =viewer.entities.add({
+            name:"tl point",
+            polyline:{
+                positions: [initialPos,tlRay],
+                width: 4,
+                material:new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED),
+            },
+        });
+        var trPoint =viewer.entities.add({
+            name:"tr point",
+            polyline:{
+                positions: [initialPos,trRay],
+                width: 4,
+                material:new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED),
+            },
+        });
+        var coverageArea = viewer.entities.add({
+            name:"coverage",
+            polygon:{
+                hierarchy: [tlRay,trRay,brRay,blRay],
+                outline: true,
+                outlineColor: Cesium.Color.YELLOW,
+                material:Cesium.Color.RED,
+                perPositionHeight:true
+            },
+        });
+var planeEntity = viewer.entities.add(new Cesium.Entity(
+{
+    plane: {
+        dimensions: new Cesium.Cartesian2(10000,100000),        
+        material: Cesium.Color.fromHsl(.5, 1, 0.5, 0.9),
+        plane:plane 
+        
+    },
+    position: b    
+}));
+
+//Enable lighting based on sun/moon positions
+viewer.scene.globe.enableLighting = true;
+
+//Enable depth testing so things behind the terrain disappear.
+viewer.scene.globe.depthTestAgainstTerrain = true;
+
+
+   
+function rePosition(){
+    var nadir = parseFloat(document.getElementById('nadir').value);
+	    if (isNaN(nadir)) { return; }
+    var height = parseFloat(document.getElementById('droneHeight').value);
+	    if (isNaN(height)) { return; }
+    var dist2Wall = parseFloat(document.getElementById('distFromWall').value);
+	    if (isNaN(dist2Wall)) { return; }
+    var fovH = parseFloat(document.getElementById('fovH').value);
+	    if (isNaN(fovH)) { return; }
+    var fovW = parseFloat(document.getElementById('fovW').value);
+	    if (isNaN(fovW)) { return; }
+        
+    var initialPos = new Cesium.Cartesian3(908928.9479744005,-4582614.971993346,4327580.8919546995)
+    var initialPosGeo = Cesium.Ellipsoid.WGS84.cartesianToCartographic(initialPos);
+    var initialPos = Cesium.Cartesian3.fromRadians(initialPosGeo.longitude,initialPosGeo.latitude,height);
+    var distFromWall = new Cesium.Cartesian3(-norm.x*dist2Wall,-norm.y*dist2Wall,-norm.z*dist2Wall); 
+    var initialPos = new Cesium.Cartesian3.add(initialPos,distFromWall,new Cesium.Cartesian3());
+    var modelheading = Cesium.Math.toRadians(90);
+    var modelpitch = Cesium.Math.toRadians(0);
+    var modelroll = 0;
+    var hpr = new Cesium.HeadingPitchRoll(modelheading,modelpitch,modelroll);
+    var droneOrientation = Cesium.Transforms.headingPitchRollQuaternion(initialPos,hpr);
+    drone.orientation = droneOrientation; 
+    drone.position = initialPos; 
+    
+    var cameraheading = Cesium.Math.toRadians(90);
+    var camerapitch = Cesium.Math.toRadians(-nadir);
+    var cameraRay = getRay(cameraheading,camerapitch,modelroll,initialPos,plane); 
+    //**camera orientation 
+    
+    //bottom right ray orientation
+    var brheading = Cesium.Math.toRadians(90+fovW);
+    var brpitch = Cesium.Math.toRadians(-nadir-fovH);
+    var brRay = getRay(brheading,brpitch,modelroll,initialPos,plane); 
+    //**bottom right ray orientation
+    
+    //bottom left ray orientation
+    var blheading = Cesium.Math.toRadians(90-fovW);
+    var blpitch = Cesium.Math.toRadians(-nadir-fovH);
+    var blRay = getRay(blheading,blpitch,modelroll,initialPos,plane); 
+    //**bottom left ray orientation
+    
+    //top right ray orientation
+    var trheading = Cesium.Math.toRadians(90+fovW);
+    var trpitch = Cesium.Math.toRadians(-nadir+fovH);
+    var trRay = getRay(trheading,trpitch,modelroll,initialPos,plane); 
+    //**top right ray orientation
+    
+    //top left ray orientation
+    var tlheading = Cesium.Math.toRadians(90-fovW);
+    var tlpitch = Cesium.Math.toRadians(-nadir+fovH);
+    var tlRay = getRay(tlheading,tlpitch,modelroll,initialPos,plane); 
+    //**top left ray orientation
+    var camerapitch = Cesium.Math.toRadians(-nadir);
+    var cameraRay = getRay(cameraheading,camerapitch,modelroll,initialPos,plane); 
+    var brpitch = Cesium.Math.toRadians(-nadir-fovH);
+    var brRay = getRay(brheading,brpitch,modelroll,initialPos,plane); 
+    var blpitch = Cesium.Math.toRadians(-nadir-fovH);
+    var blRay = getRay(blheading,blpitch,modelroll,initialPos,plane); 
+    var trpitch = Cesium.Math.toRadians(-nadir+fovH);
+    var trRay = getRay(trheading,trpitch,modelroll,initialPos,plane); 
+    var tlpitch = Cesium.Math.toRadians(-nadir+fovH);
+    var tlRay = getRay(tlheading,tlpitch,modelroll,initialPos,plane);
+    centerPoint.polyline.positions = [initialPos,cameraRay];
+    brPoint.polyline.positions = [initialPos,brRay];
+    blPoint.polyline.positions = [initialPos,blRay];
+    tlPoint.polyline.positions = [initialPos,tlRay];
+    trPoint.polyline.positions = [initialPos,trRay];
+    coverageArea.polygon.hierarchy = [tlRay,trRay,brRay,blRay]; 
+    var description = getDescription(brpos,blpos,trpos,tlpos);
+    drone.description = description;
+    //alert(mynadir);
+    console.log(nadir,height,dist2Wall);
+}
+var  tst = document.getElementById
+</script>
+
+<script> 
+	document.getElementById('distFromWall').value = dist2Wall
+	document.getElementById('droneHeight').value = height
+	document.getElementById('nadir').value = nadir
+	document.getElementById('fovH').value = fovH
+	document.getElementById('fovW').value = fovW
+</script>
+
+
+</body>
+</html>
