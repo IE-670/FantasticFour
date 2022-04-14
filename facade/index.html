@@ -2,109 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">  
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 	<script src="buildingCoordinates.js"></script>
-	<script src="../keys.js"></script>
+    <script src = "../keys.js"></script>
+    <style>
+        .inputDiv{
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            width: 200px;
+            background-color: black;
+            color: aliceblue;
 
-  <style>
-	#cesiumContainer {
-		position: absolute;
-		bottom: 0;
-		right: 0;
-		height: 100%;
-		width: 100%;
-		margin: 0;
-		overflow: hidden;
-		padding: 0;
-		font-family: sans-serif;
-		box-sizing: border-box;
-		display: inline-block;
-		z-index: 0;
-	}
-  
-  	.inputDiv {
-  		position: absolute;
-  		left: 5px;
-  		top: 5px;
-  		max-width: 200px;
-  		background-color: rgba(42,42,42,0.7);
-  		color: white;
-  		padding: 20px;
-  		border-radius: 4px;
-  	}
-  	.outputDiv {
-  		position: absolute;
-  		right: 5px;
-  		top: 5px;
-  		width: 200px;
-  		background-color: rgba(42,42,42,0.7);
-  		color: white;
-  		padding: 20px;
-  		border-radius: 4px;
-  	}
+        }
+    </style>
 
-  </style>
-  
 </head>
 <body>
-  <div id="cesiumContainer"></div>
-  <!--<div id="toolbar">
-		<div id="propertiesMenu"></div>
-    </div>
-  -->
-  
-<div class="inputDiv">
-	<p>
-	<button onclick="toggleBuildings()">Toggle Red Buildings</button>
-	</p>
-	
-	<p>
-	<label for="distFromWall">Distance to Wall</label>
-	<input type="number" id="distFromWall" onInput="rePosition();">
-	</p>
-
-	<p>
-	<label for="droneHeight">Height of Drone</label>
-	<input type="number" id="droneHeight" onInput="rePosition();">
-	</p>
-	
-	<p>
-	<label for="nadir">Off-Nadir Angle</label>
-	<input type="number" id="nadir" onInput="rePosition();">
-	</p>
-
-	<p>
-	<label for="fovH">FOV:H</label>
-	<input type="number" id="fovH" onInput="rePosition();">
-	</p>
-
-	<p>
-	<label for="fovW">FOV:W</label>
-	<input type="number" id="fovW" onInput="rePosition();">
-	</p>
-
-	<!--<button onClick="rePosition()">Re-Position</button>-->
+  <div id="cesiumContainer" style="width: 1200px; height:500px"></div>
+  <div id="toolbar">
+	<div id="propertiesMenu"></div>
+    
 </div>
 
-<div class="outputDiv">
-	<p id="areaCoverage"></p>
-</div>
-
-
+ <div id="toolbar"></div>
   <script>
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNDcxNjU0Mi04M2E0LTQyMmEtYmMzZC01YjVmNDllZTY4M2MiLCJpZCI6ODE4MTYsImlhdCI6MTY0NDM0NDU0M30.WES8jOkfwm2xjEDW4pUtgO-sbtwFvzqrchBiet3XKyQ';
     var viewer = new Cesium.Viewer('cesiumContainer', {
 //        terrainProvider: Cesium.createWorldTerrain(),
-		animation:false,
-		timeline:false,
-		homeButton:false,
-		infoBox:false,
-		geocoder:false,
-		navigationHelpButton:false,
-		sceneModePicker:false,
-		baseLayerPicker:false,
 		shouldAnimate:true
     });
     function toggleBuildings(){
@@ -295,10 +221,6 @@
         var areaTrapazoidL = .5*(a+b)*(tlpos.height-blpos.height);  
         var areaTrapazoidR = .5*(a+b)*(trpos.height-brpos.height);
         var description = "The current FOV has an area of "+areaTrapazoidL.toString()+" m^2";
-        
-        console.log('NOTE: The area doesnt seem to be changing');
-        document.getElementById('areaCoverage').innerHTML = "Area: " + areaTrapazoidL.toFixed(2) + " m<sup>2</sup>";
-        
         return description  
     }
     var description = getDescription(brpos,blpos,trpos,tlpos);
@@ -388,15 +310,10 @@ viewer.scene.globe.depthTestAgainstTerrain = true;
    
 function rePosition(){
     var nadir = parseFloat(document.getElementById('nadir').value);
-	    if (isNaN(nadir)) { return; }
     var height = parseFloat(document.getElementById('droneHeight').value);
-	    if (isNaN(height)) { return; }
     var dist2Wall = parseFloat(document.getElementById('distFromWall').value);
-	    if (isNaN(dist2Wall)) { return; }
     var fovH = parseFloat(document.getElementById('fovH').value);
-	    if (isNaN(fovH)) { return; }
     var fovW = parseFloat(document.getElementById('fovW').value);
-	    if (isNaN(fovW)) { return; }
         
     var initialPos = new Cesium.Cartesian3(908928.9479744005,-4582614.971993346,4327580.8919546995)
     var initialPosGeo = Cesium.Ellipsoid.WGS84.cartesianToCartographic(initialPos);
@@ -462,15 +379,26 @@ function rePosition(){
 }
 var  tst = document.getElementById
 </script>
-
-<script> 
-	document.getElementById('distFromWall').value = dist2Wall
-	document.getElementById('droneHeight').value = height
-	document.getElementById('nadir').value = nadir
-	document.getElementById('fovH').value = fovH
-	document.getElementById('fovW').value = fovW
-</script>
-
-
+<div class = inputDiv>
+    <button onclick="toggleBuildings()">Toggle Red Buildings</button>
+    <form>
+    <label for="dist2Wall">Distance to Wall</label>
+    <input type="text" name="dist2Wall" id="distFromWall" >
+    <script>  document.getElementById('distFromWall').value = dist2Wall</script>
+    <label for="droneHeight">Height of Drone</label>
+    <input type="text" name="droneHeight" id="droneHeight">
+    <script>  document.getElementById('droneHeight').value = height</script>
+    <label for="nadir">Off-Nadir Angle</label>
+    <input type="text" name="nadir" id="nadir">
+    <script>  document.getElementById('nadir').value = nadir</script>
+    <label for="fovH">FOV:H</label>
+    <input type="text" name="fovH" id="fovH">
+    <script>  document.getElementById('fovH').value = fovH</script>
+    <label for="fovW">FOV:W</label>
+    <input type="text" name="fovW" id="fovW">
+    <script>  document.getElementById('fovW').value = fovW</script>
+    </form>
+    <button onClick="rePosition()">Re-Position</button>
+</div>
 </body>
 </html>
