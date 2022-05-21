@@ -1,0 +1,417 @@
+[ 
+{ 
+    "id": "document", 
+    "version": "1.0" 
+}, 
+{ 
+    "id": "o-Drone-/veroviz/models/drone.gltf-stationary", 
+    "name": "o-Drone-/veroviz/models/drone.gltf-stationary", 
+    "availability": "2022-05-20T07:29:45Z/2022-05-20T07:32:37Z", 
+    "model": { 
+        "show": true, 
+        "gltf": "/veroviz/models/drone.gltf", 
+        "scale": 1, 
+        "minimumPixelSize": 75 
+    }, 
+    "label": { 
+        "fillColor":[{"rgba":[255,255,0,255]}], 
+        "font":"bold 10pt Segoe UI Semibold", 
+        "horizontalOrigin":"LEFT", 
+        "outlineColor":{"rgba":[0,0,0,255]}, 
+        "pixelOffset":{"cartesian2":[10.0,0.0]}, 
+        "scale":1.0, 
+        "show":[{"boolean":false}], 
+        "style":"FILL", 
+        "text":"Object Drone", 
+        "verticalOrigin":"BOTTOM"
+    }, 
+    "path":{ 
+        "material":{"solidColor":{"color":{"rgba":[255,255,0,255]}}}, 
+        "width":[{"number":2.0}], 
+        "show":[{"boolean":false}] 
+    }, 
+    "position": [ 
+        { 
+            "interval": "2022-05-20T07:30:11Z/2022-05-20T07:30:21Z", 
+            "cartographicDegrees": [-78.78752946853639, 43.00406652249587, 25] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:15Z/2022-05-20T07:31:25Z", 
+            "cartographicDegrees": [-78.7894892692566, 42.994355919092136, 25] 
+        }
+    ]
+}, 
+{ 
+    "id": "o-Drone-/veroviz/models/drone.gltf-vertical", 
+    "name": "o-Drone-/veroviz/models/drone.gltf-vertical", 
+    "availability": "2022-05-20T07:29:45Z/2022-05-20T07:32:37Z", 
+    "model": { 
+        "show": true, 
+        "gltf": "/veroviz/models/drone.gltf", 
+        "scale": 1, 
+        "minimumPixelSize": 75 
+    }, 
+    "label": { 
+        "fillColor":[{"rgba":[255,255,0,255]}], 
+        "font":"bold 10pt Segoe UI Semibold", 
+        "horizontalOrigin":"LEFT", 
+        "outlineColor":{"rgba":[0,0,0,255]}, 
+        "pixelOffset":{"cartesian2":[10.0,0.0]}, 
+        "scale":1.0, 
+        "show":[{"boolean":false}], 
+        "style":"FILL", 
+        "text":"Object Drone", 
+        "verticalOrigin":"BOTTOM"
+    }, 
+    "path":{ 
+        "material":{"solidColor":{"color":{"rgba":[255,255,0,255]}}}, 
+        "width":[{"number":2.0}], 
+        "show":[{"boolean":false}] 
+    }, 
+    "position": [ 
+        { 
+            "interval": "2022-05-20T07:29:45Z/2022-05-20T07:29:51Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                0.00, -78.786843, 43.000481, 0.000000, 
+                6.00, -78.786843, 43.000481, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:32:01Z/2022-05-20T07:32:07Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                136.00, -78.786843, 43.000481, 25.000000, 
+                142.00, -78.786843, 43.000481, 0.000000 
+
+            ] 
+        }
+    ]
+}, 
+{ 
+    "id": "o-Drone-/veroviz/models/drone.gltf-move", 
+    "name": "o-Drone-/veroviz/models/drone.gltf-move", 
+    "availability": "2022-05-20T07:29:45Z/2022-05-20T07:32:37Z", 
+    "model": { 
+        "show": true, 
+        "gltf": "/veroviz/models/drone.gltf", 
+        "scale": 1, 
+        "minimumPixelSize": 75 
+    }, 
+    "label": { 
+        "fillColor":[{"rgba":[255,255,0,255]}], 
+        "font":"bold 10pt Segoe UI Semibold", 
+        "horizontalOrigin":"LEFT", 
+        "outlineColor":{"rgba":[0,0,0,255]}, 
+        "pixelOffset":{"cartesian2":[10.0,0.0]}, 
+        "scale":1.0, 
+        "show":[{"boolean":false}], 
+        "style":"FILL", 
+        "text":"Object Drone", 
+        "verticalOrigin":"BOTTOM"
+    }, 
+    "path":{ 
+        "material":{"solidColor":{"color":{"rgba":[255,255,0,255]}}}, 
+        "width":[{"number":2.0}], 
+        "show":[{"boolean":false}] 
+    }, 
+    "position": [ 
+        { 
+            "interval": "2022-05-20T07:29:51Z/2022-05-20T07:30:11Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                6.00, -78.786843, 43.000481, 25.000000, 
+                26.00, -78.787529, 43.004067, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:21Z/2022-05-20T07:31:15Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                36.00, -78.787529, 43.004067, 25.000000, 
+                90.00, -78.789489, 42.994356, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:25Z/2022-05-20T07:32:01Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                100.00, -78.789489, 42.994356, 25.000000, 
+                136.00, -78.786843, 43.000481, 25.000000 
+
+            ] 
+        }
+    ]
+}, 
+{ 
+    "id": "o-wedge_1-/veroviz/models/wedge_black.gltf-move", 
+    "name": "o-wedge_1-/veroviz/models/wedge_black.gltf-move", 
+    "availability": "2022-05-20T07:29:45Z/2022-05-20T07:32:37Z", 
+    "model": { 
+        "show": true, 
+        "gltf": "/veroviz/models/wedge_black.gltf", 
+        "scale": 0, 
+        "minimumPixelSize": 50 
+    }, 
+    "label": { 
+        "fillColor":[{"rgba":[255,255,0,255]}], 
+        "font":"bold 10pt Segoe UI Semibold", 
+        "horizontalOrigin":"LEFT", 
+        "outlineColor":{"rgba":[0,0,0,255]}, 
+        "pixelOffset":{"cartesian2":[10.0,0.0]}, 
+        "scale":1.0, 
+        "show":[{"boolean":false}], 
+        "style":"FILL", 
+        "text":"Object wedge_1", 
+        "verticalOrigin":"BOTTOM"
+    }, 
+    "path":{ 
+        "material":{"solidColor":{"color":{"rgba":[255,255,0,255]}}}, 
+        "width":[{"number":2.0}], 
+        "show":[{"boolean":false}] 
+    }, 
+    "position": [ 
+        { 
+            "interval": "2022-05-20T07:30:11Z/2022-05-20T07:30:12Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                26.00, -78.787529, 43.004067, 25.000000, 
+                27.00, -78.779469, 43.000366, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:12Z/2022-05-20T07:30:13Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                27.00, -78.779469, 43.000366, 0.000000, 
+                28.00, -78.787529, 43.004067, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:13Z/2022-05-20T07:30:14Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                28.00, -78.787529, 43.004067, 25.000000, 
+                29.00, -78.792515, 42.998863, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:14Z/2022-05-20T07:30:15Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                29.00, -78.792515, 42.998863, 0.000000, 
+                30.00, -78.787529, 43.004067, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:15Z/2022-05-20T07:30:16Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                30.00, -78.787529, 43.004067, 25.000000, 
+                31.00, -78.779476, 43.000010, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:16Z/2022-05-20T07:30:17Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                31.00, -78.779476, 43.000010, 0.000000, 
+                32.00, -78.787529, 43.004067, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:17Z/2022-05-20T07:30:18Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                32.00, -78.787529, 43.004067, 25.000000, 
+                33.00, -78.778503, 42.997827, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:18Z/2022-05-20T07:30:19Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                33.00, -78.778503, 42.997827, 0.000000, 
+                34.00, -78.787529, 43.004067, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:30:19Z/2022-05-20T07:30:20Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                34.00, -78.787529, 43.004067, 25.000000, 
+                35.00, -78.777730, 42.997889, 0.000000 
+
+            ] 
+        }
+    ]
+}, 
+{ 
+    "id": "o-wedge_2-/veroviz/models/wedge_white.gltf-move", 
+    "name": "o-wedge_2-/veroviz/models/wedge_white.gltf-move", 
+    "availability": "2022-05-20T07:29:45Z/2022-05-20T07:32:37Z", 
+    "model": { 
+        "show": true, 
+        "gltf": "/veroviz/models/wedge_white.gltf", 
+        "scale": 0, 
+        "minimumPixelSize": 50 
+    }, 
+    "label": { 
+        "fillColor":[{"rgba":[255,255,0,255]}], 
+        "font":"bold 10pt Segoe UI Semibold", 
+        "horizontalOrigin":"LEFT", 
+        "outlineColor":{"rgba":[0,0,0,255]}, 
+        "pixelOffset":{"cartesian2":[10.0,0.0]}, 
+        "scale":1.0, 
+        "show":[{"boolean":false}], 
+        "style":"FILL", 
+        "text":"Object wedge_2", 
+        "verticalOrigin":"BOTTOM"
+    }, 
+    "path":{ 
+        "material":{"solidColor":{"color":{"rgba":[255,255,0,255]}}}, 
+        "width":[{"number":2.0}], 
+        "show":[{"boolean":false}] 
+    }, 
+    "position": [ 
+        { 
+            "interval": "2022-05-20T07:31:15Z/2022-05-20T07:31:16Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                90.00, -78.789489, 42.994356, 25.000000, 
+                91.00, -78.783789, 43.003983, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:16Z/2022-05-20T07:31:17Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                91.00, -78.783789, 43.003983, 0.000000, 
+                92.00, -78.789489, 42.994356, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:17Z/2022-05-20T07:31:18Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                92.00, -78.789489, 42.994356, 25.000000, 
+                93.00, -78.796270, 43.000622, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:18Z/2022-05-20T07:31:19Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                93.00, -78.796270, 43.000622, 0.000000, 
+                94.00, -78.789489, 42.994356, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:19Z/2022-05-20T07:31:20Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                94.00, -78.789489, 42.994356, 25.000000, 
+                95.00, -78.791878, 42.997895, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:20Z/2022-05-20T07:31:21Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                95.00, -78.791878, 42.997895, 0.000000, 
+                96.00, -78.789489, 42.994356, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:21Z/2022-05-20T07:31:22Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                96.00, -78.789489, 42.994356, 25.000000, 
+                97.00, -78.791900, 42.997565, 0.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:22Z/2022-05-20T07:31:23Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                97.00, -78.791900, 42.997565, 0.000000, 
+                98.00, -78.789489, 42.994356, 25.000000 
+
+            ] 
+        }, 
+        { 
+            "interval": "2022-05-20T07:31:23Z/2022-05-20T07:31:24Z",
+            "interpolationAlgorithm":"LAGRANGE", 
+            "interpolationDegree": 1, 
+            "epoch": "2022-05-20T07:29:45Z", 
+            "cartographicDegrees": [ 
+                98.00, -78.789489, 42.994356, 25.000000, 
+                99.00, -78.787508, 42.999654, 0.000000 
+
+            ] 
+        }
+    ]
+}
+]

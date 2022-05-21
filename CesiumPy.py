@@ -58,9 +58,9 @@ class CesiumMath:
     EPSILON7 = 0.0000001
     EPSILON8 = 0.00000001
     EPSILON9 = 0.000000001
-    EPSILON10 = 0.000000001
-    EPSILON11 = 0.0000000001
-    EPSILON12 = 0.00000000001
+    EPSILON10 = 0.0000000001
+    EPSILON11 = 0.00000000001
+    EPSILON12 = 0.000000000001
     
     RADIANS_PER_DEGREE = math.pi / 180.0
     DEGREES_PER_RADIAN = 180.0 / math.pi
@@ -262,6 +262,11 @@ wgs84OneOverRadii = Cartesian3( 1.0 / 6378137.0, 1.0 / 6378137.0,  1.0 / 6356752
 wgs84RadiiSquared = Cartesian3(6378137.0 * 6378137.0,
                                6378137.0 * 6378137.0,
                                6356752.3142451793 * 6356752.3142451793)
+wgs84OneOverRadiiSquared = Cartesian3(
+  1.0 / (6378137.0 * 6378137.0),
+  1.0 / (6378137.0 * 6378137.0),
+  1.0 / (6356752.3142451793 * 6356752.3142451793)
+)
 
 wgs84CenterToleranceSquared = CesiumMath.EPSILON1
 
@@ -363,9 +368,9 @@ def scaleToGeodeticSurface(cartesian, oneOverRadii, oneOverRadiiSquared, centerT
 
 class Cartographic:
     def __init__(self, longitude=0.0, latitude=0.0, height=0.0):
-        self.longitude = x
-        self.latitude = y
-        self.height = z
+        self.longitude = longitude
+        self.latitude = latitude
+        self.height = height
 
     def fromCartesian(cartesian, ellipsoid=None):
         # FIXME -- Need to find these values\n"

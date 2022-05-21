@@ -67,6 +67,7 @@ for k in range(len(df)):
         point_normal  = Cartesian3()
         point_normal.x = (coordinate_2.x+coordinate_1.x)/2
         point_normal.y = (coordinate_2.y+coordinate_1.y)/2
+        print(coordinate_1.z)
         point_normal.z = Height[k]/2
         Facade_planes.append(Plane.fromPointNormal(point_normal,normal))
     
